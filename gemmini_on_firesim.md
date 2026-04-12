@@ -24,7 +24,12 @@ uv run tools/merlin.py compile braggnn-gemmini-opt.mlir --target gemmini_braggnn
 ## 5. Show op counts
 
 ```bash
+build/host-merlin-release/install/bin/iree-compile braggnn-gemmini-opt.mlir --iree-input-type=torch --iree-hal-target-backends=llvm-cpu --compile-to=global-optimization --iree-plugin=gemmini --iree-gemmini-enable --iree-gemmini-lower-back-to-iree=false -o braggnn-gemmini-to-global-optimization.mlir
+```
+
+```bash
 build/host-merlin-release/install/bin/iree-opt braggnn-gemmini-opt.mlir --print-op-stats
+build/host-merlin-release/install/bin/iree-opt braggnn-gemmini-to-global-optimization.mlir --print-op-stats
 ```
 
 ## 6. Compile IREE tools for execution on RISC-V
