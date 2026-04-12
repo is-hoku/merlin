@@ -1,25 +1,33 @@
 # Gemmini on FireSim Workflow
-1. `python3 tools/setup.py submodules --submodules-profile core --submodule-sync`  
-2. For host compilation, `uv run tools/merlin.py build --profile gemmini --config release`  
-3. Remove `torch.operator` and `torch.ao.quantization` from input MLIR
+## 1. Setup
+```bash
+python3 tools/setup.py submodules --submodules-profile core --submodule-sync
+```
+
+## 2. Host compilation
+```bash
+uv run tools/merlin.py build --profile gemmini --config release`
+```
+
+## 3. Remove `torch.operator` and `torch.ao.quantization` from input MLIR
 
 ```bash
 build/host-merlin-release/install/bin/iree-opt braggnn-gemmini.mlir --iree-plugin=gemmini --torch-match-quantized-custom-ops --torch-fuse-quantized-ops -o braggnn-gemmini-opt.mlir
 ```
 
-4. Compile targetting for Gemmini
+## 4. Compile targetting for Gemmini
 
 ```bash
 uv run tools/merlin.py compile braggnn-gemmini-opt.mlir --target gemmini_braggnn --quantized
 ```
 
-5. Show op counts
+## 5. Show op counts
 
 ```bash
 build/host-merlin-release/install/bin/iree-opt braggnn-gemmini-opt.mlir --print-op-stats
 ```
 
-4. Compile IREE tools for execution on RISC-V
+## 6. Compile IREE tools for execution on RISC-V
 Refer [Merlin docs](https://ucb-bar.github.io/merlin/different_build_types/#cross-compilations-risc-v)
 
 ```bash
@@ -68,7 +76,7 @@ cmake \
 cmake --build "${BUILD_RISCV_DIR}"
 ```
 
-4. Create workloads by FireMarshal
+## 7. Create workloads by FireMarshal
 Copy IREE tools to FireSim:
 ```bash
 cd build-riscv/tools
